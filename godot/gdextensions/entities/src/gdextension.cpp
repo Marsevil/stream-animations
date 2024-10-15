@@ -2,9 +2,9 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/godot.hpp>
 
+#include "entities/animated_grid.hpp"
 #include "entities/animated_text.hpp"
 #include "entities/animation_controller.hpp"
-#include "entities/background.hpp"
 #include "entities/test.hpp"
 
 void init(godot::ModuleInitializationLevel init_level) {
@@ -15,7 +15,7 @@ void init(godot::ModuleInitializationLevel init_level) {
 
   GDREGISTER_CLASS(entities::TestNode);
   GDREGISTER_CLASS(entities::AnimationController);
-  GDREGISTER_CLASS(entities::Background);
+  GDREGISTER_CLASS(entities::AnimatedGrid);
   GDREGISTER_CLASS(entities::AnimatedText);
 }
 

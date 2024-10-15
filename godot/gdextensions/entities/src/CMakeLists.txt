@@ -1,6 +1,6 @@
 set(SRCS
     gdextension.cpp
-    background.cpp
+    animated_grid.cpp
     animated_text.cpp
     animation_controller.cpp
     test.cpp

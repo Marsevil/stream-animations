@@ -29,6 +29,7 @@ public:
 
   inline void set_texts(godot::PackedStringArray value) {
     _texts = std::move(value);
+    update_configuration_warnings();
   }
   inline godot::PackedStringArray const &get_texts() const { return _texts; }
 
