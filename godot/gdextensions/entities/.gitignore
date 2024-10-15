@@ -1,0 +1,7 @@
+# Clangd files
+compile_commands.json
+.cache/
+target/
+
+# Godot API
+extension_api.json
