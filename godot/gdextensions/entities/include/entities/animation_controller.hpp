@@ -1,6 +1,8 @@
 #ifndef __ENTITIES_ANIMATION_CONTROLLER_HPP
 #define __ENTITIES_ANIMATION_CONTROLLER_HPP
 
+#include <vector>
+
 #include <godot_cpp/classes/global_constants.hpp>
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/classes/wrapped.hpp>
@@ -11,11 +13,13 @@
 #include "entities/animated_text.hpp"
 
 namespace entities {
+
 class AnimationController : public godot::Node {
   GDCLASS(AnimationController, Node)
 
 public:
-  typedef godot::TypedArray<godot::NodePath> TextArray;
+  typedef godot::TypedArray<godot::NodePath> TextPathArray;
+  typedef std::vector<AnimatedText *> TextNodeArray;
   struct SignalName {
     static constexpr char *StartTextAnimation = (char *)"StartTextAnimation";
   };
@@ -24,11 +28,11 @@ public:
   ~AnimationController() = default;
   AnimationController(AnimationController const &) = delete;
 
-  inline void set_texts(TextArray value) {
-    _texts = value;
+  inline void set_text_paths(TextPathArray value) {
+    _text_paths = value;
     update_configuration_warnings();
   }
-  inline TextArray get_texts() { return _texts; }
+  inline TextPathArray get_text_paths() { return _text_paths; }
 
   godot::PackedStringArray _get_configuration_warnings() const override;
   void _ready() override;
@@ -42,13 +46,14 @@ private:
 
   uint32_t _current_text_idx = 0;
 
-  TextArray _texts = {};
+  TextPathArray _text_paths = {};
+  TextNodeArray _texts = {};
 
   static void _bind_methods() {
     godot::ClassDB::bind_method(godot::D_METHOD("set_texts", "value"),
-                                &AnimationController::set_texts);
+                                &AnimationController::set_text_paths);
     godot::ClassDB::bind_method(godot::D_METHOD("get_texts"),
-                                &AnimationController::get_texts);
+                                &AnimationController::get_text_paths);
     ADD_PROPERTY(godot::PropertyInfo(godot::Variant::ARRAY, "texts",
                                      godot::PROPERTY_HINT_ARRAY_TYPE,
                                      "AnimatedText"),
@@ -58,6 +63,7 @@ private:
                                 &AnimationController::text_animation_ended);
   }
 };
+
 } // namespace entities
 
 #endif
