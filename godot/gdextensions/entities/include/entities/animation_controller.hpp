@@ -1,28 +1,62 @@
 #ifndef __ENTITIES_ANIMATION_CONTROLLER_HPP
 #define __ENTITIES_ANIMATION_CONTROLLER_HPP
 
+#include <godot_cpp/classes/global_constants.hpp>
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/classes/wrapped.hpp>
+#include <godot_cpp/core/object.hpp>
 #include <godot_cpp/variant/node_path.hpp>
+#include <godot_cpp/variant/typed_array.hpp>
+
+#include "entities/animated_text.hpp"
 
 namespace entities {
 class AnimationController : public godot::Node {
   GDCLASS(AnimationController, Node)
 
 public:
+  typedef godot::TypedArray<godot::NodePath> TextArray;
   struct SignalName {
     static constexpr char *StartTextAnimation = (char *)"StartTextAnimation";
   };
-
-  static void _bind_methods();
 
   AnimationController() = default;
   ~AnimationController() = default;
   AnimationController(AnimationController const &) = delete;
 
+  inline void set_texts(TextArray value) {
+    _texts = value;
+    update_configuration_warnings();
+  }
+  inline TextArray get_texts() { return _texts; }
+
+  godot::PackedStringArray _get_configuration_warnings() const override;
   void _ready() override;
 
-  void restart_text_animation();
+  void text_animation_ended(AnimatedText::AnimationState animation_state,
+                            uint32_t text_idx);
+
+private:
+  void _start_text_animation();
+  AnimatedText *_get_text(uint32_t text_idx) const;
+
+  uint32_t _current_text_idx = 0;
+
+  TextArray _texts = {};
+
+  static void _bind_methods() {
+    godot::ClassDB::bind_method(godot::D_METHOD("set_texts", "value"),
+                                &AnimationController::set_texts);
+    godot::ClassDB::bind_method(godot::D_METHOD("get_texts"),
+                                &AnimationController::get_texts);
+    ADD_PROPERTY(godot::PropertyInfo(godot::Variant::ARRAY, "texts",
+                                     godot::PROPERTY_HINT_ARRAY_TYPE,
+                                     "AnimatedText"),
+                 "set_texts", "get_texts");
+
+    godot::ClassDB::bind_method(godot::D_METHOD("text_animation_ended"),
+                                &AnimationController::text_animation_ended);
+  }
 };
 } // namespace entities
 

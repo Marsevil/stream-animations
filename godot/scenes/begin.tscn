@@ -1,22 +1,8 @@
-[gd_scene load_steps=11 format=3 uid="uid://c5apwuphbunrf"]
+[gd_scene load_steps=7 format=3 uid="uid://c5apwuphbunrf"]
 
-[ext_resource type="Shader" path="res://entities/background/background.gdshader" id="1_y07nh"]
-[ext_resource type="Texture2D" uid="uid://ym0vdrjnv5gm" path="res://entities/background/background_texture.tres" id="2_dl8uu"]
+[ext_resource type="PackedScene" uid="uid://brwl6x2c25gal" path="res://entities/background/background.tscn" id="1_fqjgc"]
 [ext_resource type="Shader" path="res://entities/grid_animation/grid_animation.gdshader" id="3_j2xt2"]
 [ext_resource type="Script" path="res://utils/signal_printer.gd" id="4_xumdd"]
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_xyles"]
-noise_type = 0
-seed = 5
-frequency = 1.0
-fractal_type = 0
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_flqut"]
-noise = SubResource("FastNoiseLite_xyles")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ytm5t"]
-shader = ExtResource("1_y07nh")
-shader_parameter/offsets = SubResource("NoiseTexture2D_flqut")
 
 [sub_resource type="LabelSettings" id="LabelSettings_3ki10"]
 font_size = 30
@@ -33,28 +19,33 @@ shader_parameter/stroke_ratio = 0.07
 [node name="Begin" type="Node2D"]
 
 [node name="AnimationController" type="AnimationController" parent="."]
+texts = Array[NodePath]([NodePath("../FrText"), NodePath("../EnText")])
 
-[node name="Timer" type="Timer" parent="AnimationController"]
-wait_time = 0.5
+[node name="Background" parent="." instance=ExtResource("1_fqjgc")]
 
-[node name="Background" type="Sprite2D" parent="."]
-material = SubResource("ShaderMaterial_ytm5t")
-texture = ExtResource("2_dl8uu")
-centered = false
-
-[node name="AnimatedText" type="AnimatedText" parent="."]
-texts = PackedStringArray("Le stream va commencer", "Stream\'s comming soon")
+[node name="FrText" type="AnimatedText" parent="."]
+animation_time = 2.0
 offset_left = 204.0
 offset_top = 182.0
 offset_right = 945.0
 offset_bottom = 462.0
+text = "Le stream va commencer"
+label_settings = SubResource("LabelSettings_3ki10")
+horizontal_alignment = 1
+vertical_alignment = 1
+visible_characters = -1
+
+[node name="EnText" type="AnimatedText" parent="."]
+animation_time = 2.0
+offset_left = 204.0
+offset_top = 182.0
+offset_right = 945.0
+offset_bottom = 462.0
+text = "Stream's comming soon"
 label_settings = SubResource("LabelSettings_3ki10")
 horizontal_alignment = 1
 vertical_alignment = 1
 visible_ratio = 0.0
-
-[node name="Timer" type="Timer" parent="AnimatedText"]
-wait_time = 0.1
 
 [node name="GridAnimation" type="Node2D" parent="."]
 
@@ -71,11 +62,5 @@ autostart = true
 [node name="DebugSignals" type="Node" parent="."]
 script = ExtResource("4_xumdd")
 
-[connection signal="StartTextAnimation" from="AnimationController" to="AnimatedText" method="start_animation" flags=3]
-[connection signal="StartTextAnimation" from="AnimationController" to="AnimatedText/Timer" method="start" flags=3 binds= [-1.0]]
-[connection signal="timeout" from="AnimationController/Timer" to="AnimationController" method="restart_text_animation"]
-[connection signal="AnimationEnded" from="AnimatedText" to="AnimatedText/Timer" method="stop" flags=3]
-[connection signal="AnimationEnded" from="AnimatedText" to="AnimationController/Timer" method="start" flags=3 binds= [-1.0]]
-[connection signal="timeout" from="AnimatedText/Timer" to="AnimatedText" method="animate_text"]
 [connection signal="AnimationEnded" from="GridAnimation/AnimatedGrid" to="GridAnimation/AnimatedGrid/Timer" method="start" flags=3 binds= [-1.0]]
 [connection signal="timeout" from="GridAnimation/AnimatedGrid/Timer" to="GridAnimation/AnimatedGrid" method="start_animation"]

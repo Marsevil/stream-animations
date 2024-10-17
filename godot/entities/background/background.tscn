@@ -1,0 +1,22 @@
+[gd_scene load_steps=6 format=3 uid="uid://brwl6x2c25gal"]
+
+[ext_resource type="Shader" path="res://entities/background/background.gdshader" id="1_i7lbs"]
+[ext_resource type="Texture2D" uid="uid://ym0vdrjnv5gm" path="res://entities/background/background_texture.tres" id="2_6tp8y"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_xyles"]
+noise_type = 0
+seed = 5
+frequency = 1.0
+fractal_type = 0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_flqut"]
+noise = SubResource("FastNoiseLite_xyles")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ytm5t"]
+shader = ExtResource("1_i7lbs")
+shader_parameter/offsets = SubResource("NoiseTexture2D_flqut")
+
+[node name="Background" type="Sprite2D"]
+material = SubResource("ShaderMaterial_ytm5t")
+texture = ExtResource("2_6tp8y")
+centered = false
