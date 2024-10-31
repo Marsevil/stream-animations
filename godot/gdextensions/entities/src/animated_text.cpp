@@ -42,25 +42,23 @@ void AnimatedText::_process(double delta) {
   set_visible_ratio(show_perc);
 
   if (animation_perc >= 1.0) {
-    end_animation();
+    _end_animation();
   }
 }
 
-void AnimatedText::start_animation() {
-  if (_animation_data) {
-    return;
-  }
-
-  if (get_visible_ratio() == 0.0) {
-    _animation_data = {AnimationState::Appear};
-  } else {
-    _animation_data = {AnimationState::Disappear};
-  }
-
-  emit_signal(SignalName::AnimationStarted);
+void AnimatedText::start_appear_animation() {
+  set_visible_ratio(0.0);
+  _animation_data = {AnimationState::Appear};
+  emit_signal(SignalName::AnimationAppearStarted);
 }
 
-void AnimatedText::end_animation() {
+void AnimatedText::start_disappear_animation() {
+  set_visible_ratio(1.0);
+  _animation_data = {AnimationState::Disappear};
+  emit_signal(SignalName::AnimationDisappearStarted);
+}
+
+void AnimatedText::_end_animation() {
   if (!_animation_data) {
     return;
   }
@@ -71,11 +69,11 @@ void AnimatedText::end_animation() {
   switch (animation_state) {
   case AnimationState::Appear:
     set_visible_ratio(1.0);
+    emit_signal(SignalName::AnimationAppearEnded);
     break;
   case AnimationState::Disappear:
     set_visible_ratio(0.0);
+    emit_signal(SignalName::AnimationDisappearEnded);
     break;
   }
-
-  emit_signal(SignalName::AnimationEnded, animation_state);
 }

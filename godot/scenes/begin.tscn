@@ -18,29 +18,33 @@ shader_parameter/stroke_ratio = 0.07
 
 [node name="Begin" type="Node2D"]
 
-[node name="AnimationController" type="AnimationController" parent="."]
-texts = Array[NodePath]([NodePath("../FrText"), NodePath("../EnText")])
+[node name="AnimationController" type="AnimationController" parent="." node_paths=PackedStringArray("text")]
+text = NodePath("../TextAnimator")
 
 [node name="Background" parent="." instance=ExtResource("1_fqjgc")]
 
-[node name="FrText" type="AnimatedText" parent="."]
-animation_time = 2.0
+[node name="TextAnimator" type="TextAnimator" parent="."]
 offset_left = 204.0
 offset_top = 182.0
-offset_right = 945.0
-offset_bottom = 462.0
+offset_right = 244.0
+offset_bottom = 222.0
+
+[node name="FrText" type="AnimatedText" parent="TextAnimator"]
+animation_time = 2.0
+layout_mode = 0
+offset_right = 741.0
+offset_bottom = 280.0
 text = "Le stream va commencer"
 label_settings = SubResource("LabelSettings_3ki10")
 horizontal_alignment = 1
 vertical_alignment = 1
-visible_characters = -1
+visible_ratio = 0.0
 
-[node name="EnText" type="AnimatedText" parent="."]
+[node name="EnText" type="AnimatedText" parent="TextAnimator"]
 animation_time = 2.0
-offset_left = 204.0
-offset_top = 182.0
-offset_right = 945.0
-offset_bottom = 462.0
+layout_mode = 0
+offset_right = 741.0
+offset_bottom = 280.0
 text = "Stream's comming soon"
 label_settings = SubResource("LabelSettings_3ki10")
 horizontal_alignment = 1
@@ -62,5 +66,14 @@ autostart = true
 [node name="DebugSignals" type="Node" parent="."]
 script = ExtResource("4_xumdd")
 
+[connection signal="AnimationEnd" from="TextAnimator" to="DebugSignals" method="print_signal" binds= ["TextAnimator::AnimationEnd"]]
+[connection signal="AnimationAppearEnded" from="TextAnimator/FrText" to="DebugSignals" method="print_signal" binds= ["AnimationAppearEnded FR"]]
+[connection signal="AnimationAppearStarted" from="TextAnimator/FrText" to="DebugSignals" method="print_signal" binds= ["AnimationAppearStarted FR"]]
+[connection signal="AnimationDisappearEnded" from="TextAnimator/FrText" to="DebugSignals" method="print_signal" binds= ["AnimationDisappearEnded FR"]]
+[connection signal="AnimationDisappearStarted" from="TextAnimator/FrText" to="DebugSignals" method="print_signal" binds= ["AnimationDisappearStarted FR"]]
+[connection signal="AnimationAppearEnded" from="TextAnimator/EnText" to="DebugSignals" method="print_signal" binds= ["AnimationAppearEnded EN"]]
+[connection signal="AnimationAppearStarted" from="TextAnimator/EnText" to="DebugSignals" method="print_signal" binds= ["AnimationAppearStarted EN"]]
+[connection signal="AnimationDisappearEnded" from="TextAnimator/EnText" to="DebugSignals" method="print_signal" binds= ["AnimationDisappearEnded EN"]]
+[connection signal="AnimationDisappearStarted" from="TextAnimator/EnText" to="DebugSignals" method="print_signal" binds= ["AnimationDisappearStarted EN"]]
 [connection signal="AnimationEnded" from="GridAnimation/AnimatedGrid" to="GridAnimation/AnimatedGrid/Timer" method="start" flags=3 binds= [-1.0]]
 [connection signal="timeout" from="GridAnimation/AnimatedGrid/Timer" to="GridAnimation/AnimatedGrid" method="start_animation"]

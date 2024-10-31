@@ -6,6 +6,7 @@
 #include "entities/animated_text.hpp"
 #include "entities/animation_controller.hpp"
 #include "entities/test.hpp"
+#include "entities/text_animator.hpp"
 
 void init(godot::ModuleInitializationLevel init_level) {
   if (init_level !=
@@ -17,6 +18,7 @@ void init(godot::ModuleInitializationLevel init_level) {
   GDREGISTER_CLASS(entities::AnimationController);
   GDREGISTER_CLASS(entities::AnimatedGrid);
   GDREGISTER_CLASS(entities::AnimatedText);
+  GDREGISTER_CLASS(entities::TextAnimator);
 }
 
 void deinit(godot::ModuleInitializationLevel init_level) {}

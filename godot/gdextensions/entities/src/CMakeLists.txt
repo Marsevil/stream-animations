@@ -3,6 +3,7 @@ set(SRCS
     animated_grid.cpp
     animated_text.cpp
     animation_controller.cpp
+    text_animator.cpp
     test.cpp
 )
 

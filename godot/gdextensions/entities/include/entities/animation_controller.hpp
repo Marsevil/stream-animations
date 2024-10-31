@@ -6,11 +6,14 @@
 #include <godot_cpp/classes/global_constants.hpp>
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/classes/wrapped.hpp>
+#include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/core/object.hpp>
+#include <godot_cpp/core/property_info.hpp>
 #include <godot_cpp/variant/node_path.hpp>
 #include <godot_cpp/variant/typed_array.hpp>
 
 #include "entities/animated_text.hpp"
+#include "entities/text_animator.hpp"
 
 namespace entities {
 
@@ -28,39 +31,42 @@ public:
   ~AnimationController() = default;
   AnimationController(AnimationController const &) = delete;
 
-  inline void set_text_paths(TextPathArray value) {
-    _text_paths = value;
+  // Get / Set
+  void set_text(TextAnimator *value) {
+    _text = value;
     update_configuration_warnings();
   }
-  inline TextPathArray get_text_paths() { return _text_paths; }
+  TextAnimator *get_text() { return _text; }
 
+  // Override
   godot::PackedStringArray _get_configuration_warnings() const override;
   void _ready() override;
 
-  void text_animation_ended(AnimatedText::AnimationState animation_state,
-                            uint32_t text_idx);
-
 private:
-  void _start_text_animation();
-  AnimatedText *_get_text(uint32_t text_idx) const;
+  // [Export]
+  TextAnimator *_text = nullptr;
 
-  uint32_t _current_text_idx = 0;
+  // Properties
+  godot::Timer *_timer = nullptr;
 
-  TextPathArray _text_paths = {};
-  TextNodeArray _texts = {};
+  // Methods
+  void _switch_text();
+  void _text_animation_ended();
 
   static void _bind_methods() {
-    godot::ClassDB::bind_method(godot::D_METHOD("set_texts", "value"),
-                                &AnimationController::set_text_paths);
-    godot::ClassDB::bind_method(godot::D_METHOD("get_texts"),
-                                &AnimationController::get_text_paths);
-    ADD_PROPERTY(godot::PropertyInfo(godot::Variant::ARRAY, "texts",
-                                     godot::PROPERTY_HINT_ARRAY_TYPE,
-                                     "AnimatedText"),
-                 "set_texts", "get_texts");
+    godot::ClassDB::bind_method(godot::D_METHOD("set_text", "value"),
+                                &AnimationController::set_text);
+    godot::ClassDB::bind_method(godot::D_METHOD("get_text"),
+                                &AnimationController::get_text);
+    ADD_PROPERTY(godot::PropertyInfo(godot::Variant::OBJECT, "text",
+                                     godot::PROPERTY_HINT_NODE_TYPE,
+                                     "TextAnimator"),
+                 "set_text", "get_text");
 
-    godot::ClassDB::bind_method(godot::D_METHOD("text_animation_ended"),
-                                &AnimationController::text_animation_ended);
+    godot::ClassDB::bind_method(godot::D_METHOD("_switch_text"),
+                                &AnimationController::_switch_text);
+    godot::ClassDB::bind_method(godot::D_METHOD("_text_animation_ended"),
+                                &AnimationController::_text_animation_ended);
   }
 };
 
