@@ -21,13 +21,13 @@ class AnimatedText : public godot::Label {
 public:
   struct SignalName {
     static constexpr char *AnimationAppearStarted =
-        (char *)"AnimationAppearStarted";
+        (char *)"animation_appear_started";
     static constexpr char *AnimationDisappearStarted =
-        (char *)"AnimationDisappearStarted";
+        (char *)"animation_disappear_started";
     static constexpr char *AnimationAppearEnded =
-        (char *)"AnimationAppearEnded";
+        (char *)"animation_appear_ended";
     static constexpr char *AnimationDisappearEnded =
-        (char *)"AnimationDisappearEnded";
+        (char *)"animation_disappear_ended";
   };
 
   enum AnimationState { Appear, Disappear };
@@ -37,11 +37,10 @@ public:
     double elapsed_time = 0.0;
   };
 
-  AnimatedText();
+  AnimatedText() = default;
   ~AnimatedText() = default;
   AnimatedText(const AnimatedText &) = delete;
 
-  void _ready() override;
   void _process(double delta) override;
 
   inline void set_animation_time(double value) { _animation_time = value; }

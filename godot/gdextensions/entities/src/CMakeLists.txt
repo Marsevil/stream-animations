@@ -4,6 +4,7 @@ set(SRCS
     animated_text.cpp
     animation_controller.cpp
     text_animator.cpp
+    random_animator.cpp
     test.cpp
 )
 

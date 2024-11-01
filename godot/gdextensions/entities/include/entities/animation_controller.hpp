@@ -10,10 +10,10 @@
 #include <godot_cpp/core/object.hpp>
 #include <godot_cpp/core/property_info.hpp>
 #include <godot_cpp/variant/node_path.hpp>
+#include <godot_cpp/variant/signal.hpp>
 #include <godot_cpp/variant/typed_array.hpp>
 
 #include "entities/animated_text.hpp"
-#include "entities/text_animator.hpp"
 
 namespace entities {
 
@@ -23,50 +23,47 @@ class AnimationController : public godot::Node {
 public:
   typedef godot::TypedArray<godot::NodePath> TextPathArray;
   typedef std::vector<AnimatedText *> TextNodeArray;
+  enum State {
+    Idle,
+    TextSwitching,
+    AnimationRunning,
+  };
   struct SignalName {
-    static constexpr char *StartTextAnimation = (char *)"StartTextAnimation";
+    static constexpr char *StartSwitchText = (char *)"start_switch_text";
+    static constexpr char *StartNewAnimation = (char *)"start_new_animation";
   };
 
   AnimationController() = default;
   ~AnimationController() = default;
   AnimationController(AnimationController const &) = delete;
 
-  // Get / Set
-  void set_text(TextAnimator *value) {
-    _text = value;
-    update_configuration_warnings();
-  }
-  TextAnimator *get_text() { return _text; }
-
   // Override
   godot::PackedStringArray _get_configuration_warnings() const override;
   void _ready() override;
 
-private:
-  // [Export]
-  TextAnimator *_text = nullptr;
+  void switch_text_ended();
+  void animation_ended();
 
+private:
   // Properties
   godot::Timer *_timer = nullptr;
+  State _last_state = State::Idle;
 
   // Methods
+  void _timer_timeout();
   void _switch_text();
-  void _text_animation_ended();
+  void _start_new_animation();
 
   static void _bind_methods() {
-    godot::ClassDB::bind_method(godot::D_METHOD("set_text", "value"),
-                                &AnimationController::set_text);
-    godot::ClassDB::bind_method(godot::D_METHOD("get_text"),
-                                &AnimationController::get_text);
-    ADD_PROPERTY(godot::PropertyInfo(godot::Variant::OBJECT, "text",
-                                     godot::PROPERTY_HINT_NODE_TYPE,
-                                     "TextAnimator"),
-                 "set_text", "get_text");
+    ADD_SIGNAL({SignalName::StartSwitchText});
+    ADD_SIGNAL({SignalName::StartNewAnimation});
 
-    godot::ClassDB::bind_method(godot::D_METHOD("_switch_text"),
-                                &AnimationController::_switch_text);
-    godot::ClassDB::bind_method(godot::D_METHOD("_text_animation_ended"),
-                                &AnimationController::_text_animation_ended);
+    godot::ClassDB::bind_method(godot::D_METHOD("switch_text_ended"),
+                                &AnimationController::switch_text_ended);
+    godot::ClassDB::bind_method(godot::D_METHOD("animation_ended"),
+                                &AnimationController::animation_ended);
+    godot::ClassDB::bind_method(godot::D_METHOD("_timer_timeout"),
+                                &AnimationController::_timer_timeout);
   }
 };
 

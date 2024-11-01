@@ -18,8 +18,7 @@ shader_parameter/stroke_ratio = 0.07
 
 [node name="Begin" type="Node2D"]
 
-[node name="AnimationController" type="AnimationController" parent="." node_paths=PackedStringArray("text")]
-text = NodePath("../TextAnimator")
+[node name="AnimationController" type="AnimationController" parent="."]
 
 [node name="Background" parent="." instance=ExtResource("1_fqjgc")]
 
@@ -38,7 +37,6 @@ text = "Le stream va commencer"
 label_settings = SubResource("LabelSettings_3ki10")
 horizontal_alignment = 1
 vertical_alignment = 1
-visible_ratio = 0.0
 
 [node name="EnText" type="AnimatedText" parent="TextAnimator"]
 animation_time = 2.0
@@ -49,31 +47,21 @@ text = "Stream's comming soon"
 label_settings = SubResource("LabelSettings_3ki10")
 horizontal_alignment = 1
 vertical_alignment = 1
+visible_characters = 0
 visible_ratio = 0.0
 
-[node name="GridAnimation" type="Node2D" parent="."]
+[node name="DebugSignals" type="Node" parent="."]
+script = ExtResource("4_xumdd")
 
-[node name="AnimatedGrid" type="AnimatedGrid" parent="GridAnimation"]
+[node name="RandomAnimator" type="RandomAnimator" parent="."]
+
+[node name="AnimatedGrid" type="AnimatedGrid" parent="RandomAnimator"]
 material = SubResource("ShaderMaterial_qohjn")
 position = Vector2(181.5, 471.5)
 scale = Vector2(269, 269)
 mesh = SubResource("QuadMesh_toymn")
 
-[node name="Timer" type="Timer" parent="GridAnimation/AnimatedGrid"]
-one_shot = true
-autostart = true
-
-[node name="DebugSignals" type="Node" parent="."]
-script = ExtResource("4_xumdd")
-
-[connection signal="AnimationEnd" from="TextAnimator" to="DebugSignals" method="print_signal" binds= ["TextAnimator::AnimationEnd"]]
-[connection signal="AnimationAppearEnded" from="TextAnimator/FrText" to="DebugSignals" method="print_signal" binds= ["AnimationAppearEnded FR"]]
-[connection signal="AnimationAppearStarted" from="TextAnimator/FrText" to="DebugSignals" method="print_signal" binds= ["AnimationAppearStarted FR"]]
-[connection signal="AnimationDisappearEnded" from="TextAnimator/FrText" to="DebugSignals" method="print_signal" binds= ["AnimationDisappearEnded FR"]]
-[connection signal="AnimationDisappearStarted" from="TextAnimator/FrText" to="DebugSignals" method="print_signal" binds= ["AnimationDisappearStarted FR"]]
-[connection signal="AnimationAppearEnded" from="TextAnimator/EnText" to="DebugSignals" method="print_signal" binds= ["AnimationAppearEnded EN"]]
-[connection signal="AnimationAppearStarted" from="TextAnimator/EnText" to="DebugSignals" method="print_signal" binds= ["AnimationAppearStarted EN"]]
-[connection signal="AnimationDisappearEnded" from="TextAnimator/EnText" to="DebugSignals" method="print_signal" binds= ["AnimationDisappearEnded EN"]]
-[connection signal="AnimationDisappearStarted" from="TextAnimator/EnText" to="DebugSignals" method="print_signal" binds= ["AnimationDisappearStarted EN"]]
-[connection signal="AnimationEnded" from="GridAnimation/AnimatedGrid" to="GridAnimation/AnimatedGrid/Timer" method="start" flags=3 binds= [-1.0]]
-[connection signal="timeout" from="GridAnimation/AnimatedGrid/Timer" to="GridAnimation/AnimatedGrid" method="start_animation"]
+[connection signal="start_new_animation" from="AnimationController" to="RandomAnimator" method="start_animation"]
+[connection signal="start_switch_text" from="AnimationController" to="TextAnimator" method="switch_text"]
+[connection signal="animation_end" from="TextAnimator" to="AnimationController" method="switch_text_ended"]
+[connection signal="animation_ended" from="RandomAnimator" to="AnimationController" method="animation_ended"]

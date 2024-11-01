@@ -11,17 +11,12 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 
 #include "entities/animation_controller.hpp"
-#include "entities/error.hpp"
 
 using namespace entities;
 
 godot::PackedStringArray
 AnimationController::_get_configuration_warnings() const {
   godot::PackedStringArray warnings;
-
-  if (!_text) {
-    warnings.push_back("Text should be set");
-  }
 
   return warnings;
 }
@@ -31,21 +26,36 @@ void AnimationController::_ready() {
     return;
   }
 
-  if (!_text) {
-    throw PropertyNotSetError("text", "TextAnimator");
-  }
-
-  _text->connect(TextAnimator::SignalName::AnimationEnd,
-                 godot::Callable(this, "_text_animation_ended"));
-
   _timer = memnew(godot::Timer);
   _timer->set_wait_time(1.0);
   _timer->set_one_shot(true);
-  _timer->connect("timeout", godot::Callable(this, "_switch_text"));
+  _timer->connect("timeout", godot::Callable(this, "_timer_timeout"));
   add_child(_timer);
   _timer->start();
 }
 
-void AnimationController::_switch_text() { _text->switch_text(); }
+void AnimationController::_switch_text() {
+  _last_state = State::TextSwitching;
+  emit_signal(SignalName::StartSwitchText);
+}
 
-void AnimationController::_text_animation_ended() { _timer->start(); }
+void AnimationController::_start_new_animation() {
+  _last_state = State::AnimationRunning;
+  emit_signal(SignalName::StartNewAnimation);
+}
+
+void AnimationController::_timer_timeout() {
+  switch (_last_state) {
+  case State::Idle:
+  case State::TextSwitching:
+    _start_new_animation();
+    break;
+  case State::AnimationRunning:
+    _switch_text();
+    break;
+  }
+}
+
+void AnimationController::switch_text_ended() { _timer->start(); }
+
+void AnimationController::animation_ended() { _timer->start(); }

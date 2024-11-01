@@ -21,7 +21,7 @@ class TextAnimator : public godot::Control {
 
 public:
   struct SignalName {
-    static constexpr char *AnimationEnd = (char *)"AnimationEnd";
+    static constexpr char *AnimationEnd = (char *)"animation_end";
   };
 
   TextAnimator() = default;

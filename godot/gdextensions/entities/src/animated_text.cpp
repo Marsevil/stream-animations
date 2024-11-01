@@ -17,10 +17,6 @@
 
 using namespace entities;
 
-AnimatedText::AnimatedText() { this->set_visible_characters(0); }
-
-void AnimatedText::_ready() {}
-
 void AnimatedText::_process(double delta) {
   if (!_animation_data) {
     return;

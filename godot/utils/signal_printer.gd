@@ -6,5 +6,7 @@ func print_signal(message: String):
 	print(message) 
 
 
-func print_signal_with_params(signal_name: String, params):
-	print(signal_name, params)
+func print_node_entered(params: Node, message: String):
+	print(message)
+	print(params.has_method("start_animation"))
+	print(params.has_signal("animation_ended"))

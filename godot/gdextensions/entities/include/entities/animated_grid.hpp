@@ -1,11 +1,12 @@
 #ifndef __ENTITIES_ANIMATED_GRID
 #define __ENTITIES_ANIMATED_GRID
 
+#include <optional>
+
 #include <godot_cpp/classes/mesh_instance2d.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/core/defs.hpp>
 #include <godot_cpp/core/property_info.hpp>
-#include <optional>
 
 namespace entities {
 
@@ -14,8 +15,8 @@ class AnimatedGrid : public godot::MeshInstance2D {
 
 public:
   struct SignalName {
-    static constexpr char *AnimationEnded = (char *)"AnimationEnded";
-    static constexpr char *AnimationStarted = (char *)"AnimationStarted";
+    static constexpr char *AnimationEnded = (char *)"animation_ended";
+    static constexpr char *AnimationStarted = (char *)"animation_started";
   };
 
   enum AnimationState { Appear, Disappear };
@@ -46,6 +47,9 @@ private:
   static constexpr char *SHOW_PERCENT_PNAME = (char *)"show_percent";
 
   static void _bind_methods() {
+    ADD_SIGNAL({SignalName::AnimationStarted});
+    ADD_SIGNAL({SignalName::AnimationEnded});
+
     godot::ClassDB::bind_method(godot::D_METHOD("set_animation_time", "value"),
                                 &AnimatedGrid::set_animation_time);
     godot::ClassDB::bind_method(godot::D_METHOD("get_animation_time"),
@@ -57,9 +61,6 @@ private:
                                 &AnimatedGrid::start_animation);
     godot::ClassDB::bind_method(godot::D_METHOD("end_animation"),
                                 &AnimatedGrid::end_animation);
-
-    ADD_SIGNAL({SignalName::AnimationStarted});
-    ADD_SIGNAL({SignalName::AnimationEnded});
   }
 };
 
