@@ -9,5 +9,6 @@ if (CMAKE_BUILD_TYPE STREQUAL "DEBUG")
 endif()
 
 include(cmake/FetchGodotCPP.cmake)
+include(cmake/FetchBiBSGodot.cmake)
 
 add_subdirectory(src)

@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include <BiBS.h>
+
 #include <godot_cpp/classes/global_constants.hpp>
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/classes/wrapped.hpp>
@@ -18,56 +20,33 @@
 namespace entities {
 
 class AnimationController : public godot::Node {
-  GDCLASS(AnimationController, Node)
+  GDCLASS(AnimationController, godot::Node)
+  BSCLASS;
 
 public:
   typedef godot::TypedArray<godot::NodePath> TextPathArray;
   typedef std::vector<AnimatedText *> TextNodeArray;
-  struct SignalName {
-    static constexpr char *StartTextAnimation = (char *)"StartTextAnimation";
-  };
 
   AnimationController() = default;
   ~AnimationController() = default;
   AnimationController(AnimationController const &) = delete;
 
-  // Get / Set
-  void set_text(TextAnimator *value) {
-    _text = value;
-    update_configuration_warnings();
-  }
-  TextAnimator *get_text() { return _text; }
-
   // Override
   godot::PackedStringArray _get_configuration_warnings() const override;
-  void _ready() override;
+  void ready();
 
 private:
-  // [Export]
   TextAnimator *_text = nullptr;
+  BS_EXPORT(&AnimationController::_text, .name = "text");
 
   // Properties
   godot::Timer *_timer = nullptr;
 
   // Methods
   void _switch_text();
+  BS_EXPORT(&AnimationController::_switch_text);
   void _text_animation_ended();
-
-  static void _bind_methods() {
-    godot::ClassDB::bind_method(godot::D_METHOD("set_text", "value"),
-                                &AnimationController::set_text);
-    godot::ClassDB::bind_method(godot::D_METHOD("get_text"),
-                                &AnimationController::get_text);
-    ADD_PROPERTY(godot::PropertyInfo(godot::Variant::OBJECT, "text",
-                                     godot::PROPERTY_HINT_NODE_TYPE,
-                                     "TextAnimator"),
-                 "set_text", "get_text");
-
-    godot::ClassDB::bind_method(godot::D_METHOD("_switch_text"),
-                                &AnimationController::_switch_text);
-    godot::ClassDB::bind_method(godot::D_METHOD("_text_animation_ended"),
-                                &AnimationController::_text_animation_ended);
-  }
+  BS_EXPORT(&AnimationController::_text_animation_ended);
 };
 
 } // namespace entities

@@ -26,7 +26,7 @@ AnimationController::_get_configuration_warnings() const {
   return warnings;
 }
 
-void AnimationController::_ready() {
+void AnimationController::ready() {
   if (godot::Engine::get_singleton()->is_editor_hint()) {
     return;
   }
