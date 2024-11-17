@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://sjhpfk10mq26"]
+
+[ext_resource type="Texture2D" uid="uid://0r54qh71m46u" path="res://animations/grid_animation/square/square.svg" id="1_xgbsn"]
+
+[node name="Square" type="Node2D"]
+
+[node name="Square" type="Sprite2D" parent="."]
+position = Vector2(20, 20)
+texture = ExtResource("1_xgbsn")

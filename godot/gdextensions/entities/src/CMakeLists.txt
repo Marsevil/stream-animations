@@ -1,11 +1,11 @@
 set(SRCS
     gdextension.cpp
+    basic_animation.cpp
     animated_grid.cpp
     animated_text.cpp
     animation_controller.cpp
     text_animator.cpp
     random_animator.cpp
-    test.cpp
 )
 
 add_library(${PROJECT_NAME} SHARED ${SRCS})

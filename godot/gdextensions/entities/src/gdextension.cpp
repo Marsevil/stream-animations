@@ -5,8 +5,8 @@
 #include "entities/animated_grid.hpp"
 #include "entities/animated_text.hpp"
 #include "entities/animation_controller.hpp"
+#include "entities/basic_animation.hpp"
 #include "entities/random_animator.hpp"
-#include "entities/test.hpp"
 #include "entities/text_animator.hpp"
 
 void init(godot::ModuleInitializationLevel init_level) {
@@ -15,12 +15,12 @@ void init(godot::ModuleInitializationLevel init_level) {
     return;
   }
 
-  GDREGISTER_CLASS(entities::TestNode);
   GDREGISTER_CLASS(entities::AnimationController);
   GDREGISTER_CLASS(entities::AnimatedGrid);
   GDREGISTER_CLASS(entities::AnimatedText);
   GDREGISTER_CLASS(entities::TextAnimator);
   GDREGISTER_CLASS(entities::RandomAnimator);
+  GDREGISTER_CLASS(entities::BasicAnimation);
 }
 
 void deinit(godot::ModuleInitializationLevel init_level) {}

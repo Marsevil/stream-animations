@@ -53,7 +53,10 @@ void RandomAnimator::start_animation() {
 }
 
 void RandomAnimator::_child_added(Node *node) {
-  if (is_animatable(node)) {
+  bool const is_animatable = this->is_animatable(node);
+  bool const already_known = std::find(_animatables.begin(), _animatables.end(),
+                                       node) != _animatables.end();
+  if (is_animatable && !already_known) {
     _animatables.push_back(node);
     node->connect(EXPECTED_SIGNAL, Callable(this, "_animation_ended"));
   }

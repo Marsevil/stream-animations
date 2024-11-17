@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://dvs50icu1ucwn"]
+
+[ext_resource type="Texture2D" uid="uid://dvxoh1q6hh1i7" path="res://animations/grid_animation/cursor/cursor.svg" id="1_rlexd"]
+
+[node name="Cursor" type="Node2D"]
+
+[node name="Cursor" type="Sprite2D" parent="."]
+position = Vector2(22, 21)
+texture = ExtResource("1_rlexd")

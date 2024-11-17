@@ -1,20 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://c5apwuphbunrf"]
+[gd_scene load_steps=4 format=3 uid="uid://c5apwuphbunrf"]
 
 [ext_resource type="PackedScene" uid="uid://brwl6x2c25gal" path="res://entities/background/background.tscn" id="1_fqjgc"]
-[ext_resource type="Shader" path="res://entities/grid_animation/grid_animation.gdshader" id="3_j2xt2"]
-[ext_resource type="Script" path="res://utils/signal_printer.gd" id="4_xumdd"]
+[ext_resource type="PackedScene" uid="uid://wv2kd30p5lp7" path="res://animations/grid_animation/grid_animation.tscn" id="3_ax4xm"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_3ki10"]
 font_size = 30
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_qohjn"]
-shader = ExtResource("3_j2xt2")
-shader_parameter/color = Color(0.412152, 0.412152, 0.412152, 1)
-shader_parameter/percent_show = 0.0
-shader_parameter/nb_lines = 8
-shader_parameter/stroke_ratio = 0.07
-
-[sub_resource type="QuadMesh" id="QuadMesh_toymn"]
 
 [node name="Begin" type="Node2D"]
 
@@ -50,16 +40,9 @@ vertical_alignment = 1
 visible_characters = 0
 visible_ratio = 0.0
 
-[node name="DebugSignals" type="Node" parent="."]
-script = ExtResource("4_xumdd")
-
 [node name="RandomAnimator" type="RandomAnimator" parent="."]
 
-[node name="AnimatedGrid" type="AnimatedGrid" parent="RandomAnimator"]
-material = SubResource("ShaderMaterial_qohjn")
-position = Vector2(181.5, 471.5)
-scale = Vector2(269, 269)
-mesh = SubResource("QuadMesh_toymn")
+[node name="GridAnimation" parent="RandomAnimator" instance=ExtResource("3_ax4xm")]
 
 [connection signal="start_new_animation" from="AnimationController" to="RandomAnimator" method="start_animation"]
 [connection signal="start_switch_text" from="AnimationController" to="TextAnimator" method="switch_text"]
